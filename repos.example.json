@@ -1,0 +1,19 @@
+{
+  "githubusername/repositoryname": {
+    "secret": "github_webhook_secret",
+    "branches": {
+      "branch_name": {
+        "target": "path/to/target/directory",
+        "commands": {
+          "before": [
+            "rm -rf some/stuff"
+          ],
+          "after": [
+            "npm i",
+            "npm run build"
+          ]
+        }
+      }
+    }
+  }
+}
