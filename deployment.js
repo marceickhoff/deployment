@@ -9,7 +9,18 @@ const port = 8080;
 http.createServer((req, res) => {
 
     req.on("data", chunk => {
-        console.log("Data recieved!");
+
+        // Handle ping event
+        if (req.headers["x-github-event"] === "ping") {
+            console.log("Ping event recieved!");
+            return;
+        }
+
+        // Check for GitHub event
+        if (req.headers["x-github-event"] !== "push") {
+            console.log("Unsupported event!");
+            return;
+        }
 
         // Parse request body
         const body = JSON.parse(chunk);
