@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/marceickhoff/deployment/issues"
   },
-  "homepage": "https://github.com/marceickhoff/deployment#readme"
+  "homepage": "https://github.com/marceickhoff/deployment#readme",
+  "dependencies": {
+    "forever": "^2.0.0"
+  },
+  "scripts": {
+    "start": "forever start -l log.log -a -o out.log -a -e err.log -a --watchDirectory . --watchIgnore *.log deployment.js",
+    "stop": "forever stop deployment.js"
+  }
 }
