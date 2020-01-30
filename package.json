@@ -1,0 +1,20 @@
+{
+  "name": "deployment",
+  "version": "1.0.0",
+  "description": "Node.js deployment script for GitHub Webhooks",
+  "main": "deployment.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marceickhoff/deployment.git"
+  },
+  "author": {
+    "name": "Marc Eickhoff",
+    "email": "mail@marceickhoff.com",
+    "url": "https://marceickhoff.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marceickhoff/deployment/issues"
+  },
+  "homepage": "https://github.com/marceickhoff/deployment#readme"
+}
