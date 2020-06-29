@@ -1,4 +1,5 @@
 # Node.js Deployment Script for GitHub Webhooks
+![license](https://img.shields.io/github/license/marceickhoff/deployment)
 
 This is a simple Node.js Script for automatic deployments using GitHub Webhooks.
 
