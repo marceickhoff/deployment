@@ -1,16 +1,17 @@
 {
-  "githubusername/repositoryname": {
-    "secret": "github_webhook_secret",
+  "YOUR_USERNAME_HERE/YOUR_REPOSITORY_NAME_HERE": {
+    "secret": "YOUR_WEBHOOK_SECRET_HERE",
     "branches": {
-      "branch_name": {
-        "target": "path/to/target/directory",
+      "master": {
+        "target": "your/target/directory/here",
         "commands": {
           "before": [
-            "rm -rf some/stuff"
+            "echo These commands will run before the pull",
+            "rm -rf some/example/stuff"
           ],
           "after": [
-            "npm i",
-            "npm run build"
+            "echo These commands will run after the pull",
+            "npm run example"
           ]
         }
       }
