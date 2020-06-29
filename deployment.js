@@ -68,61 +68,61 @@ http.createServer((req, res) => {
             return;
         }
 
-        // Branch that was pushed
-        const branchName = body.ref.split("/").slice(-1)[0];
-
-        // Get branch
-        const branch = repo.branches[branchName];
-        if (typeof branch === "undefined") {
-            res.body.message = `No deployment configured for branch ${branchName} of repository ${repoName}`;
-            res.statusCode = 404;
-            res.statusMessage = "Not Found";
-            return;
-        }
-
         // Handle ping event
         if (event === "ping") {
             res.body.message = "Ping event received";
             res.body.success = true;
             res.statusCode = 200;
             res.statusMessage = "OK";
-            return;
         }
 
         // Handle push event
         else if (event === "push") {
-            res.body.message = "Push event received, starting deployment process";
-            res.statusCode = 202;
-            res.statusMessage = "Accepted";
-            res.body.success = true;
 
-            // List of commands to run
-            let commands = [];
+            // Branch that was pushed
+            const branchName = body.ref.split("/").slice(-1)[0];
 
-            // Commands to run before deployment
-            if (Array.isArray(branch.commands.before)) {
-                commands = commands.concat(branch.commands.before);
+            // Get branch
+            const branch = repo.branches[branchName];
+            if (typeof branch === "undefined") {
+                res.body.message = `No deployment configured for branch ${branchName} of repository ${repoName}`;
+                res.statusCode = 404;
+                res.statusMessage = "Not Found";
             }
+            else {
+                res.body.message = "Push event received, starting deployment process";
+                res.statusCode = 202;
+                res.statusMessage = "Accepted";
+                res.body.success = true;
 
-            // Commands for actual deployment
-            commands = commands.concat([
-                `git fetch --all`,
-                `git checkout ${branchName}`,
-                `git reset --hard origin/${branchName}`,
-                `git pull`,
-            ]);
+                // List of commands to run
+                let commands = [];
 
-            // Commands to run after deployment
-            if (Array.isArray(branch.commands.after)) {
-                commands = commands.concat(branch.commands.after);
+                // Commands to run before deployment
+                if (Array.isArray(branch.commands.before)) {
+                    commands = commands.concat(branch.commands.before);
+                }
+
+                // Commands for actual deployment
+                commands = commands.concat([
+                    `git fetch --all`,
+                    `git checkout ${branchName}`,
+                    `git reset --hard origin/${branchName}`,
+                    `git pull`,
+                ]);
+
+                // Commands to run after deployment
+                if (Array.isArray(branch.commands.after)) {
+                    commands = commands.concat(branch.commands.after);
+                }
+
+                // Execute commands in child process
+                console.log(`Deploying ${branchName} of repository ${repoName}...`);
+                let process = childProcess.exec(commands.join(" && "), {cwd: branch.target});
+                process.stdout.on('data', function (data) {
+                    console.log(data.toString());
+                });
             }
-
-            // Execute commands in child process
-            console.log(`Deploying ${branchName} of repository ${repoName}...`);
-            let process = childProcess.exec(commands.join(" && "), {cwd: branch.target});
-            process.stdout.on('data', function (data) {
-                console.log(data.toString());
-            });
         }
 
         // Handle unsupported event
@@ -130,7 +130,6 @@ http.createServer((req, res) => {
             res.body.message = `Unsupported event "${event}"`;
             res.statusCode = 400;
             res.statusMessage = "Bad Request";
-            return;
         }
 
         // End transaction, send response
